@@ -77,6 +77,20 @@ class Whpi_Admin {
 	}
 
 	/**
+	 * Upload file
+	 * @param  array $file [description]
+	 * @return void
+	 */
+	protected function upload_file($file) {
+		$upload_dir = wp_upload_dir();
+		$source      = $file['tmp_name'];
+		$destination = trailingslashit( $upload_dir['basedir'] ) . 'wphi.xlsx';
+
+		move_uploaded_file($source, $destination);
+		update_option('wphi-file', $destination);
+	}
+
+	/**
 	 * Check export process
 	 * Hooked via action admin_init, priority 999
 	 * @return 	void
@@ -92,19 +106,26 @@ class Whpi_Admin {
 				'active' => false,
 			]);
 
-			$file = $_FILE['file'];
+			$file = $_FILES['file'];
 
 			if(0 !== intval($file['error'])) :
 				$valid = false;
 				$errors[] = 'file-error';
 			endif;
 
-			if(!in_array($file['type'], ['application/vnd.ms-excel'])) :
+			if(!in_array($file['type'], ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'])) :
 				$valid = false;
 				$errors[] = 'wrong-file-type';
 			endif;
 
 			if(false !== $valid) :
+				$this->upload_file($file);
+				$link = add_query_arg([
+					'page'       => 'wuoymember-whpi',
+					'upload-hpi' => true
+				],admin_url('admin.php'));
+				wp_redirect($link);
+				exit;
 			else :
 				$link = add_query_arg([
 					'page'	=> 'wuoymember-whpi',
@@ -157,7 +178,11 @@ class Whpi_Admin {
 	 * @return 	void
 	 */
 	public function display_export_page() {
-		require plugin_dir_path( __FILE__ ) . 'partials/export-form.php';
+		if(isset($_GET['upload-hpi']) && true === boolval($_GET['uplaod-hpi'])) :
+			require plugin_dir_path( __FILE__ ) . 'partials/excel-process.php';
+		else :
+			require plugin_dir_path( __FILE__ ) . 'partials/export-form.php';
+		endif;
 	}
 
 }
