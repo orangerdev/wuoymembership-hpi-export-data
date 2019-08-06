@@ -61,18 +61,6 @@ class Whpi_Admin {
 	 */
 	public function enqueue_styles() {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Whpi_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Whpi_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/whpi-admin.css', array(), $this->version, 'all' );
 
 	}
@@ -84,20 +72,24 @@ class Whpi_Admin {
 	 */
 	public function enqueue_scripts() {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Whpi_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Whpi_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/whpi-admin.js', array( 'jquery' ), $this->version, false );
 
+	}
+
+	/**
+	 * Register sub admin menu under WuoyMeember
+	 * Hooked via action admin_menu, priority 999
+	 * @since 	1.0.0
+	 * @return 	void
+	 */
+	public function register_admin_menu() {
+
+		add_submenu_page('wuoy-member', __('Ekspor Data HPI', 'whpi'), __('HPI Export', 'whpi'), 'manage_options', 'wuoymember-whpi', [$this, 'display_export_page']);
+
+	}
+
+	public function display_export_page() {
+		require plugin_dir_path( __FILE__ ) . 'partials/export-form.php';
 	}
 
 }
