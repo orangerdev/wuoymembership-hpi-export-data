@@ -24,24 +24,24 @@
                 <td>
                     <input type="file" name="file" value="" id='file'><br />
                     <em>
-                        <?php _e('File yang diizinkan hanya yang berformat .xls atau .xlsx', 'wphi'); ?><br />
-                        <?php printf(__('Besar file yang digunakan adalah %s MB', 'wphi'), $max); ?>
+                        <?php _e('File yang diizinkan hanya yang berformat .xls atau .xlsx', 'whpi'); ?><br />
+                        <?php printf(__('Besar file yang digunakan adalah %s MB', 'whpi'), $max); ?>
                     </em>
                 </td>
             </tr>
             <tr>
-                <th><?php _e('Status Aktif', 'wphi'); ?></th>
+                <th><?php _e('Status Aktif', 'whpi'); ?></th>
                 <td>
                     <label for="active">
                         <input type="checkbox" name="active" value="1" id='active' />
-                        <?php _e('Status keanggotaan langsung aktif', 'wphi'); ?>
+                        <?php _e('Status keanggotaan langsung aktif', 'whpi'); ?>
                     </label>
                 </td>
             </tr>
         </table>
         <p class='submit'>
-            <?php wp_nonce_field('wphi-upload-excel'); ?>
-            <button type="submit" name="button" class='button button-primary'><?php _e('Upload Data','wphi'); ?></button>
+            <?php wp_nonce_field('whpi-upload-excel'); ?>
+            <button type="submit" name="button" class='button button-primary'><?php _e('Upload Data','whpi'); ?></button>
         </p>
     </form>
 </div>

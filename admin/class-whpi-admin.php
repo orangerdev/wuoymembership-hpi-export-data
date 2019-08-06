@@ -81,13 +81,16 @@ class Whpi_Admin {
 	 * @param  array $file [description]
 	 * @return void
 	 */
-	protected function upload_file($file) {
+	protected function upload_file($file, $active = false) {
 		$upload_dir = wp_upload_dir();
 		$source      = $file['tmp_name'];
-		$destination = trailingslashit( $upload_dir['basedir'] ) . 'wphi.xlsx';
+		$destination = trailingslashit( $upload_dir['basedir'] ) . 'whpi.xlsx';
 
 		move_uploaded_file($source, $destination);
-		update_option('wphi-file', $destination);
+		update_option('whpi-file', [
+			'file' 		=> $destination,
+			'active'	=> $active
+		]);
 	}
 
 	/**
@@ -97,7 +100,7 @@ class Whpi_Admin {
 	 */
 	public function check_process() {
 
-		if(isset($_POST['_wpnonce']) && wp_verify_nonce($_POST['_wpnonce'], 'wphi-upload-excel') && current_user_can('manage_options')) :
+		if(isset($_POST['_wpnonce']) && wp_verify_nonce($_POST['_wpnonce'], 'whpi-upload-excel') && current_user_can('manage_options')) :
 
 			$valid  = true;
 			$errors = [];
@@ -119,7 +122,7 @@ class Whpi_Admin {
 			endif;
 
 			if(false !== $valid) :
-				$this->upload_file($file);
+				$this->upload_file($file, $args['active']);
 				$link = add_query_arg([
 					'page'       => 'wuoymember-whpi',
 					'upload-hpi' => true
