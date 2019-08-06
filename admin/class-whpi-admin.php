@@ -77,6 +77,70 @@ class Whpi_Admin {
 	}
 
 	/**
+	 * Check export process
+	 * Hooked via action admin_init, priority 999
+	 * @return 	void
+	 */
+	public function check_process() {
+
+		if(isset($_POST['_wpnonce']) && wp_verify_nonce($_POST['_wpnonce'], 'wphi-upload-excel') && current_user_can('manage_options')) :
+
+			$valid  = true;
+			$errors = [];
+			$args   = wp_parse_args($_POST,[
+				'product'	=> NULL,
+				'active' => false,
+			]);
+
+			$file = $_FILE['file'];
+
+			if(0 !== intval($file['error'])) :
+				$valid = false;
+				$errors[] = 'file-error';
+			endif;
+
+			if(!in_array($file['type'], ['application/vnd.ms-excel'])) :
+				$valid = false;
+				$errors[] = 'wrong-file-type';
+			endif;
+
+			if(false !== $valid) :
+			else :
+				$link = add_query_arg([
+					'page'	=> 'wuoymember-whpi',
+					'error-hpi'	=> implode('+++' ,$errors)
+				],admin_url('admin.php'));
+				wp_redirect($link);
+				exit;
+			endif;
+		endif;
+
+	}
+
+	/**
+	 * Display admin message
+	 * Hooked via action admin_notices, priority 999
+	 * @since 	1.0.0
+	 * @return 	void
+	 */
+	public function admin_notice() {
+		if(isset($_GET['error-hpi'])) :
+			$errors = explode('+++', $_GET['error-hpi']);
+		?>
+		<div class="notice notice-error">
+			<?php if(in_array('file-error', $errors)) : ?>
+			<p><?php _e('Anda belum mengupload file', 'whpi'); ?></p>
+			<?php endif; ?>
+
+			<?php if(in_array('wrong-file-type', $errors)) : ?>
+			<p><?php _e('File yang anda upload bukan file excel yang benar', 'whpi'); ?></p>
+			<?php endif; ?>
+		</div>
+		<?php
+		endif;
+	}
+
+	/**
 	 * Register sub admin menu under WuoyMeember
 	 * Hooked via action admin_menu, priority 999
 	 * @since 	1.0.0
@@ -88,6 +152,10 @@ class Whpi_Admin {
 
 	}
 
+	/**
+	 * Display export page
+	 * @return 	void
+	 */
 	public function display_export_page() {
 		require plugin_dir_path( __FILE__ ) . 'partials/export-form.php';
 	}

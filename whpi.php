@@ -66,6 +66,21 @@ register_deactivation_hook( __FILE__, 'deactivate_whpi' );
  */
 require plugin_dir_path( __FILE__ ) . 'includes/class-whpi.php';
 
+if(!function_exists('__debug')) :
+function __debug()
+{
+	$bt     = debug_backtrace();
+	$caller = array_shift($bt);
+	?><pre><?php
+	print_r([
+		"file"  => $caller["file"],
+		"line"  => $caller["line"],
+		"args"  => func_get_args()
+	]);
+	?></pre><?php
+}
+endif;
+
 /**
  * Begins execution of the plugin.
  *

@@ -7,7 +7,7 @@
 ?>
 <div class="wrap">
     <h2><?php _e('Ekspor Data HPI', 'whpi'); ?></h2>
-    <form class="" action="<?php echo admin_url('/'); ?>" method="POST">
+    <form class="" action="<?php echo admin_url('/'); ?>" method="POST" enctype="multipart/form-data">
         <table class='form-table'>
             <tr>
                 <th><?php _e('Keanggotaan', 'whpi'); ?></th>
