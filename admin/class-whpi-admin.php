@@ -178,7 +178,7 @@ class Whpi_Admin {
 	 * @return 	void
 	 */
 	public function display_export_page() {
-		if(isset($_GET['upload-hpi']) && true === boolval($_GET['uplaod-hpi'])) :
+		if(isset($_GET['upload-hpi']) && false !== boolval($_GET['upload-hpi'])) :
 			require plugin_dir_path( __FILE__ ) . 'partials/excel-process.php';
 		else :
 			require plugin_dir_path( __FILE__ ) . 'partials/export-form.php';
